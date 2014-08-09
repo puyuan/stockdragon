@@ -3,6 +3,8 @@ from  wget import crawl
 import bsddb
 import sys
 import datetime
+from pymongo import MongoClient
+
 
 db=bsddb.btopen("crawledPages.db", "c")
 
@@ -29,6 +31,14 @@ def extract(link):
         f_all.write('"%s","%s",%d,%d,"%s",%s\n'%(soup.title.string, stock, undervalued,discount, link, timestamp))
 	print "found undervalued instances: "+ str(article_body.find("undervalued"))
 	db[str(link)]='1'
+	record={ "title": soup.title.string,
+                  "stock": stock, 
+                  "link": link, 
+                   "timestamp": timestamp, 
+                  "content": article_body
+	
+       		 }
+	db_mongo["test_collection"].insert(record)
   
 
 	
@@ -41,6 +51,13 @@ feed_content=crawl(feed_url)
 feed_content=str(feed_content)
 soup=BeautifulSoup(feed_content, "xml")
 link_arr=soup.find_all("link")
+
+# starting up Mongo Client
+client=MongoClient("localhost", 27017)
+db_mongo=client.test_database
+
+
+
 for link in link_arr:
 	try:
 		if( db.has_key(str(link.string))!=1):
