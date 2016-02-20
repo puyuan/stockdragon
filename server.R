@@ -31,7 +31,7 @@ write.initial.HTML <- function(response) {
     response$write("<h1>A Simple Web Application</h1>")
     response$write(paste("<i>***Times through the Rook.app function:", 3, 
         "***</i>"))
-    mapply( write.article.HTML,key=names(rank_list[1:100]), value=rank_list[1:100], MoreArgs=list(response=response))
+    mapply( write.article.HTML,key=names(rank_list[1:30]), value=rank_list[1:30], MoreArgs=list(response=response))
 	
     response$write("<form method=\"POST\">")
     response$write("<h3>Icebreaker Survey</h3>")
